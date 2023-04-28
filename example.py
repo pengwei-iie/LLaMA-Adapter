@@ -85,7 +85,7 @@ def main(
     temperature: float = 0.1,
     top_p: float = 0.75,
     max_seq_len: int = 512,
-    max_batch_size: int = 32,
+    max_batch_size: int = 2,
 ):
     local_rank, world_size = setup_model_parallel()
     if local_rank > 0:
@@ -94,16 +94,17 @@ def main(
     generator = load(
         ckpt_dir, tokenizer_path, adapter_path, local_rank, world_size, max_seq_len, max_batch_size
     )
-    instructs = [
-        "Tell me about alpacas.",
-        "Tell me about the president of Mexico in 2019.",
-        "Tell me about the king of France in 2019.",
-        "List all Canadian provinces in alphabetical order.",
-        "Write a Python program that prints the first 10 Fibonacci numbers.",
-        "Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",
-        "Tell me five words that rhyme with 'shock'.",
-        "Translate the sentence 'I have no mouth but I must scream' into Spanish.",
-        "Count up from 1 to 500."]
+    # instructs = [
+    #     "Tell me about alpacas.",
+    #     "Tell me about the president of Mexico in 2019.",
+    #     "Tell me about the king of France in 2019.",
+    #     "List all Canadian provinces in alphabetical order.",
+    #      "Write a Python program that prints the first 10 Fibonacci numbers.",
+    #     "Write a program that prints the numbers from 1 to 100. But for multiples of three print 'Fizz' instead of the number and for the multiples of five print 'Buzz'. For numbers which are multiples of both three and five print 'FizzBuzz'.",
+    #     "Tell me five words that rhyme with 'shock'.",
+    #     "Translate the sentence 'I have no mouth but I must scream' into Spanish.",
+    #     "Count up from 1 to 500."]
+    instructs = ["告诉我一些羊驼的信息", "Tell me about the king of France in 2019."]
     prompts = [PROMPT_DICT['prompt_no_input'].format_map({'instruction':x, 'input': ''}) for x in instructs]
 
     results = generator.generate(
